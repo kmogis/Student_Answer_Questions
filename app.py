@@ -4,10 +4,11 @@ import matplotlib.pyplot as plt
 import io
 import base64
 from flask import Flask, render_template, request, redirect, g, send_file
+
 # Initialize the Flask app
 app = Flask(__name__)
 
-# Database path
+# Database path (use an absolute path or environment variable for deployment)
 DATABASE = 'responses.db'
 
 def get_db():
@@ -36,7 +37,7 @@ def insert_sample_data():
         db.execute("INSERT INTO questions (question_text, qr_code_link) VALUES (?, ?)",
                    ("When is your birthday?", "/static/qr_1.png"))
         db.commit()
-        
+
 @app.route('/generate-all-qr')
 def generate_all_qr():
     db = get_db()
@@ -44,7 +45,7 @@ def generate_all_qr():
 
     for question in questions:
         question_id = question[0]
-        base_url = "http://127.0.0.1:5001"  # Replace with your deployed app URL if needed
+        base_url = request.host_url.rstrip('/')  # Get the dynamic base URL
         qr_url = f"{base_url}/answer/{question_id}"
 
         qr = qrcode.make(qr_url)
@@ -54,11 +55,10 @@ def generate_all_qr():
 
     return "QR codes for all questions generated and saved in the static folder."
 
-# Route to display the answer form
 @app.route('/generate-qr/<int:question_id>')
 def generate_qr(question_id=1):
     try:
-        base_url = "http://127.0.0.1:5001"  # Replace this with your deployed app URL if needed
+        base_url = request.host_url.rstrip('/')  # Get the dynamic base URL
         qr_url = f"{base_url}/answer/{question_id}"
 
         # Generate the QR code
@@ -68,8 +68,7 @@ def generate_qr(question_id=1):
         return f"QR code for question {question_id} generated and saved at {qr_file_path}. Use this image in your slides."
     except Exception as e:
         return f"An error occurred while generating the QR code: {e}"
-    
-# Route to view all responses
+
 @app.route('/responses')
 def view_responses():
     db = get_db()
@@ -77,9 +76,8 @@ def view_responses():
     return render_template('responses.html', responses=responses)
 
 @app.route('/thank-you/<int:question_id>')
-def thank_you(question_id=1):  # Use a dynamic question ID if needed
+def thank_you(question_id=1):
     db = get_db()
-    # Get the count of each response text for a specific question
     responses = db.execute("SELECT response_text, COUNT(*) as count FROM responses WHERE question_id = ? GROUP BY response_text", (question_id,)).fetchall()
 
     # Prepare data for the pie chart
@@ -102,8 +100,8 @@ def thank_you(question_id=1):  # Use a dynamic question ID if needed
     img_base64 = base64.b64encode(img.getvalue()).decode('utf-8')
 
     return render_template('thank_you.html', img_data=img_base64)
-        
+
 if __name__ == '__main__':
     init_db()  # Run this once to create the tables
     insert_sample_data()  # Run this once to insert sample data
-    app.run(port=5001)  # Use a different port, e.g., 5001
+    app.run(host='0.0.0.0', port=5000)  # Listen on all network interfaces for deployment
