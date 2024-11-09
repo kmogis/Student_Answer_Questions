@@ -1,3 +1,4 @@
+import os
 import sqlite3
 import qrcode
 import matplotlib.pyplot as plt
@@ -8,8 +9,8 @@ from flask import Flask, render_template, request, redirect, g, send_file
 # Initialize the Flask app
 app = Flask(__name__)
 
-# Database path (use an absolute path or environment variable for deployment)
-DATABASE = 'responses.db'
+# Database path (use an absolute path for deployment)
+DATABASE = os.path.join(os.path.dirname(__file__), 'responses.db')
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -34,26 +35,32 @@ def init_db():
 def insert_sample_data():
     with app.app_context():
         db = get_db()
-        db.execute("INSERT INTO questions (question_text, qr_code_link) VALUES (?, ?)",
-                   ("When is your birthday?", "/static/qr_1.png"))
-        db.commit()
+        try:
+            db.execute("INSERT INTO questions (question_text, qr_code_link) VALUES (?, ?)",
+                       ("When is your birthday?", "/static/qr_1.png"))
+            db.commit()
+        except sqlite3.IntegrityError:
+            print("Sample data already exists, skipping insertion.")
 
 @app.route('/generate-all-qr')
 def generate_all_qr():
-    db = get_db()
-    questions = db.execute("SELECT question_id FROM questions").fetchall()
+    try:
+        db = get_db()
+        questions = db.execute("SELECT question_id FROM questions").fetchall()
 
-    for question in questions:
-        question_id = question[0]
-        base_url = request.host_url.rstrip('/')  # Get the dynamic base URL
-        qr_url = f"{base_url}/answer/{question_id}"
+        for question in questions:
+            question_id = question[0]
+            base_url = request.host_url.rstrip('/')  # Get the dynamic base URL
+            qr_url = f"{base_url}/answer/{question_id}"
 
-        qr = qrcode.make(qr_url)
-        qr_file_path = f"static/qr_{question_id}.png"
-        qr.save(qr_file_path)
-        print(f"QR code for question {question_id} generated and saved at {qr_file_path}")
+            qr = qrcode.make(qr_url)
+            qr_file_path = f"static/qr_{question_id}.png"
+            qr.save(qr_file_path)
+            print(f"QR code for question {question_id} generated and saved at {qr_file_path}")
 
-    return "QR codes for all questions generated and saved in the static folder."
+        return "QR codes for all questions generated and saved in the static folder."
+    except Exception as e:
+        return f"An error occurred while generating QR codes: {e}"
 
 @app.route('/generate-qr/<int:question_id>')
 def generate_qr(question_id=1):
@@ -77,31 +84,37 @@ def view_responses():
 
 @app.route('/thank-you/<int:question_id>')
 def thank_you(question_id=1):
-    db = get_db()
-    responses = db.execute("SELECT response_text, COUNT(*) as count FROM responses WHERE question_id = ? GROUP BY response_text", (question_id,)).fetchall()
+    try:
+        db = get_db()
+        responses = db.execute("SELECT response_text, COUNT(*) as count FROM responses WHERE question_id = ? GROUP BY response_text", (question_id,)).fetchall()
 
-    # Prepare data for the pie chart
-    labels = [row[0] for row in responses]
-    sizes = [row[1] for row in responses]
+        # Prepare data for the pie chart
+        labels = [row[0] for row in responses]
+        sizes = [row[1] for row in responses]
 
-    # Create the pie chart
-    plt.figure(figsize=(8, 6))
-    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
-    plt.title(f'Poll Results for Question {question_id}')
-    plt.axis('equal')
+        # Create the pie chart
+        plt.figure(figsize=(8, 6))
+        plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
+        plt.title(f'Poll Results for Question {question_id}')
+        plt.axis('equal')
 
-    # Save the chart as an image in memory and encode it in base64
-    img = io.BytesIO()
-    plt.savefig(img, format='png')
-    img.seek(0)
-    plt.close()
+        # Save the chart as an image in memory and encode it in base64
+        img = io.BytesIO()
+        plt.savefig(img, format='png')
+        img.seek(0)
+        plt.close()
 
-    # Encode the image as a base64 string to embed in the HTML
-    img_base64 = base64.b64encode(img.getvalue()).decode('utf-8')
+        # Encode the image as a base64 string to embed in the HTML
+        img_base64 = base64.b64encode(img.getvalue()).decode('utf-8')
 
-    return render_template('thank_you.html', img_data=img_base64)
+        return render_template('thank_you.html', img_data=img_base64)
+    except Exception as e:
+        return f"An error occurred while displaying the results: {e}"
 
 if __name__ == '__main__':
-    init_db()  # Run this once to create the tables
-    insert_sample_data()  # Run this once to insert sample data
-    app.run(host='0.0.0.0', port=5000)  # Listen on all network interfaces for deployment
+    try:
+        init_db()  # Run this once to create the tables
+        insert_sample_data()  # Run this once to insert sample data
+        app.run(host='0.0.0.0', port=5000)  # Listen on all network interfaces for deployment
+    except Exception as e:
+        print(f"An error occurred during app startup: {e}")
