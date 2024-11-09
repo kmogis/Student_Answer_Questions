@@ -63,7 +63,7 @@ def answer_question(question_id):
         return render_template('answer_form.html', question=question[0], question_id=question_id)
     else:
         return "Question not found", 404
-
+        
 @app.route('/generate-qr/<int:question_id>')
 def generate_qr(question_id=1):
     try:
@@ -72,9 +72,14 @@ def generate_qr(question_id=1):
 
         # Generate the QR code
         qr = qrcode.make(qr_url)
-        qr_file_path = f"static/qr_{question_id}.png"
-        qr.save(qr_file_path)
-        return f"QR code for question {question_id} generated and saved at {qr_file_path}. Use this image in your slides."
+
+        # Save the QR code to a BytesIO object
+        img_io = io.BytesIO()
+        qr.save(img_io, format='PNG')
+        img_io.seek(0)
+
+        # Return the image as a response
+        return send_file(img_io, mimetype='image/png')
     except Exception as e:
         return f"An error occurred while generating the QR code: {e}"
 
