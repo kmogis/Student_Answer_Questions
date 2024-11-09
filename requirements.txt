@@ -124,7 +124,7 @@ imageio==2.6.0
 imagesize==1.1.0
 importlib-metadata==4.13.0
 importlib-resources==5.10.0
-ipycanvas @ file:///home/conda/feedstock_root/build_artifacts/ipycanvas_1608374455890/work
+# ipycanvas @ file:///home/conda/feedstock_root/build_artifacts/ipycanvas_1608374455890/work
 ipykernel==5.1.2
 ipython==7.8.0
 ipython_genutils==0.2.0
