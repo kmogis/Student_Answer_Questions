@@ -28,7 +28,7 @@ backcall==0.1.0
 # backports.functools-lru-cache @ file:///tmp/build/80754af9/backports.functools_lru_cache_1618170165463/work
 backports.os==0.1.1
 backports.shutil-get-terminal-size==1.0.0
-backports.tempfile @ file:///home/linux1/recipes/ci/backports.tempfile_1610991236607/work
+# backports.tempfile @ file:///home/linux1/recipes/ci/backports.tempfile_1610991236607/work
 backports.weakref==1.0.post1
 beautifulsoup4==4.8.0
 binaryornot==0.4.4
