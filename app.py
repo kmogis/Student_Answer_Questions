@@ -100,21 +100,21 @@ def thank_you(question_id=1):
         sizes = [0 if size == np.inf or np.isnan(size) else size for size in sizes]
 
         # Create the pie chart
-        plt.figure(figsize=(8, 6))
-        plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
-        plt.title(f'Poll Results for Question {question_id}')
-        plt.axis('equal')
+        # plt.figure(figsize=(8, 6))
+        # plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
+        # plt.title(f'Poll Results for Question {question_id}')
+        # plt.axis('equal')
 
-        # Save the chart as an image in memory and encode it in base64
-        img = io.BytesIO()
-        plt.savefig(img, format='png')
-        img.seek(0)
-        plt.close()
+        # # Save the chart as an image in memory and encode it in base64
+        # img = io.BytesIO()
+        # plt.savefig(img, format='png')
+        # img.seek(0)
+        # plt.close()
 
-        # Encode the image as a base64 string to embed in the HTML
-        img_base64 = base64.b64encode(img.getvalue()).decode('utf-8')
+        # # Encode the image as a base64 string to embed in the HTML
+        # img_base64 = base64.b64encode(img.getvalue()).decode('utf-8')
 
-        return render_template('thank_you.html', img_data=img_base64)
+        return #render_template('thank_you.html', img_data=img_base64)
     except Exception as e:
         return f"An error occurred while displaying the results: {e}"
 
