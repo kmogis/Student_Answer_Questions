@@ -67,18 +67,14 @@ def answer_question(question_id):
 @app.route('/generate-qr/<int:question_id>')
 def generate_qr(question_id=1):
     try:
-        base_url = request.host_url.rstrip('/')  # Get the dynamic base URL
+        base_url = request.host_url.rstrip('/')
         qr_url = f"{base_url}/answer/{question_id}"
 
-        # Generate the QR code
         qr = qrcode.make(qr_url)
-
-        # Save the QR code to a BytesIO object
         img_io = io.BytesIO()
         qr.save(img_io, format='PNG')
         img_io.seek(0)
 
-        # Return the image as a response
         return send_file(img_io, mimetype='image/png')
     except Exception as e:
         return f"An error occurred while generating the QR code: {e}"
