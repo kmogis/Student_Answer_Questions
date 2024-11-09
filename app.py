@@ -42,25 +42,27 @@ def insert_sample_data():
         except sqlite3.IntegrityError:
             print("Sample data already exists, skipping insertion.")
 
-@app.route('/generate-all-qr')
-def generate_all_qr():
-    try:
-        db = get_db()
-        questions = db.execute("SELECT question_id FROM questions").fetchall()
+@app.route('/answer/<int:question_id>', methods=['GET', 'POST'])
+def answer_question(question_id):
+    if request.method == 'POST':
+        try:
+            student_id = request.form['student_id']
+            response_text = request.form['response_text']
+            db = get_db()
+            db.execute("INSERT INTO responses (student_id, question_id, response_text) VALUES (?, ?, ?)",
+                       (student_id, question_id, response_text))
+            db.commit()
+            return redirect(f'/thank-you/{question_id}')
+        except sqlite3.Error as e:
+            print(f"Database error: {e}")
+            return "An error occurred while submitting your response. Please try again.", 500
 
-        for question in questions:
-            question_id = question[0]
-            base_url = request.host_url.rstrip('/')  # Get the dynamic base URL
-            qr_url = f"{base_url}/answer/{question_id}"
-
-            qr = qrcode.make(qr_url)
-            qr_file_path = f"static/qr_{question_id}.png"
-            qr.save(qr_file_path)
-            print(f"QR code for question {question_id} generated and saved at {qr_file_path}")
-
-        return "QR codes for all questions generated and saved in the static folder."
-    except Exception as e:
-        return f"An error occurred while generating QR codes: {e}"
+    db = get_db()
+    question = db.execute("SELECT question_text FROM questions WHERE question_id = ?", (question_id,)).fetchone()
+    if question:
+        return render_template('answer_form.html', question=question[0], question_id=question_id)
+    else:
+        return "Question not found", 404
 
 @app.route('/generate-qr/<int:question_id>')
 def generate_qr(question_id=1):
@@ -80,7 +82,7 @@ def generate_qr(question_id=1):
 def view_responses():
     db = get_db()
     responses = db.execute("SELECT * FROM responses").fetchall()
-    return render_template('responses.html', responses=responses)
+    return render_template('thank_you.html', responses=responses)
 
 @app.route('/thank-you/<int:question_id>')
 def thank_you(question_id=1):
