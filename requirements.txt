@@ -3,6 +3,7 @@ Werkzeug==2.1.2
 gunicorn==20.1.0
 qrcode==7.4.2
 matplotlib==3.5.3
-Jinja2==3.1.2  # Explicitly adding Flask's template rendering engine
-MarkupSafe==2.1.1  # Dependency for Flask templates
-numpy==1.21.0  # or a version compatible with your project
+numpy==1.21.0  # Choose a version with a pre-built wheel
+pip>=20.2
+setuptools>=57.5.0
+wheel>=0.36.2
