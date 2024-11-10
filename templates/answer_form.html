@@ -2,26 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Answer Question</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <title>Answer Form</title>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2 class="mb-4">Answer the Question</h2>
-        <p>{{ question }}</p>
-        <form method="POST">
-            <div class="mb-3">
-                <label for="student_id" class="form-label">Your Student ID</label>
-                <input type="text" id="student_id" name="student_id" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label for="response_text" class="form-label">Your Answer</label>
-                <textarea id="response_text" name="response_text" class="form-control" rows="4" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-    </div>
+    <h1>Submit Your Answer</h1>
+    <form method="post">
+        <label for="student_id">Student ID:</label>
+        <input type="text" id="student_id" name="student_id" required><br><br>
+
+        <label>Select Your Answer:</label><br>
+        <input type="radio" id="A" name="response_text" value="A" required>
+        <label for="A">A</label><br>
+        <input type="radio" id="B" name="response_text" value="B">
+        <label for="B">B</label><br>
+        <input type="radio" id="C" name="response_text" value="C">
+        <label for="C">C</label><br>
+        <input type="radio" id="D" name="response_text" value="D">
+        <label for="D">D</label><br>
+        <input type="radio" id="E" name="response_text" value="E">
+        <label for="E">E</label><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
 </body>
 </html>
