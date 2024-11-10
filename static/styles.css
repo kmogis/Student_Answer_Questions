@@ -56,6 +56,9 @@ input[type="radio"] {
 }
 
 .radio-group label {
-    margin-bottom: 10px;
-    display: block;
+    display: inline-block;
+    margin-right: 15px;
+    font-size: 16px;
+}
+
 }
