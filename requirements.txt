@@ -3,3 +3,4 @@ Werkzeug==2.1.2
 gunicorn==20.1.0
 qrcode==7.4.2
 matplotlib==3.5.3
+numpy==1.23.0  # Compatible version with your code and environment
