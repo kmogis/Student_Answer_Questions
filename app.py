@@ -48,6 +48,16 @@ def insert_sample_data():
         except sqlite3.IntegrityError:
             print("Sample data already exists, skipping insertion.")
 
+@app.route('/reset-responses')
+def reset_responses():
+    try:
+        db = get_db()
+        db.execute("DELETE FROM responses")
+        db.commit()
+        return "All responses have been reset."
+    except sqlite3.Error as e:
+        return f"An error occurred while resetting responses: {e}", 500
+        
 @app.route('/answer/<int:question_id>', methods=['GET', 'POST'])
 def answer_question(question_id):
     if request.method == 'POST':
