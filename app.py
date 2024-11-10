@@ -1,3 +1,9 @@
+import numpy as np
+
+# Monkey-patch np.Inf if it's missing
+if not hasattr(np, 'Inf'):
+    np.Inf = np.inf
+
 import os
 import sqlite3
 import qrcode
@@ -5,7 +11,6 @@ import matplotlib.pyplot as plt
 import io
 import base64
 from flask import Flask, render_template, request, redirect, g, send_file
-import numpy as np
 
 # Initialize the Flask app
 app = Flask(__name__)
