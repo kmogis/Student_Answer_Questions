@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import io
 import base64
 from flask import Flask, render_template, request, redirect, g, send_file
+import numpy as np
 
 # Initialize the Flask app
 app = Flask(__name__)
