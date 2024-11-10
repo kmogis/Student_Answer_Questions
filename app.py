@@ -53,7 +53,7 @@ def answer_question(question_id):
             db.execute("INSERT INTO responses (student_id, question_id, response_text) VALUES (?, ?, ?)",
                        (student_id, question_id, response_text))
             db.commit()
-            return 0#redirect(f'/thank-you/{question_id}')
+            return redirect(f'/thank-you/{question_id}')
         except sqlite3.Error as e:
             print(f"Database error: {e}")
             return "An error occurred while submitting your response. Please try again.", 500
@@ -84,7 +84,7 @@ def generate_qr(question_id=1):
 def view_responses():
     db = get_db()
     responses = db.execute("SELECT * FROM responses").fetchall()
-    return 0#render_template('thank_you.html', responses=responses)
+    return render_template('thank_you.html', responses=responses)
 
 @app.route('/thank-you/<int:question_id>')
 def thank_you(question_id=1):
