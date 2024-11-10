@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import io
 import base64
 from flask import Flask, render_template, request, redirect, g, send_file
-import numpy as np
 
 # Initialize the Flask app
 app = Flask(__name__)
@@ -97,7 +96,7 @@ def thank_you(question_id=1):
         sizes = [row[1] for row in responses]
 
         # Replace any np.inf or np.nan values with 0
-        sizes = [0 if size == np.inf or np.isnan(size) else size for size in sizes]
+        #sizes = [0 if size == np.inf or np.isnan(size) else size for size in sizes]
 
         #Create the pie chart
         plt.figure(figsize=(8, 6))
