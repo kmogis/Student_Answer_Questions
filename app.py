@@ -43,7 +43,7 @@ def insert_sample_data():
         db = get_db()
         try:
             db.execute("INSERT INTO questions (question_text, qr_code_link) VALUES (?, ?)",
-                       ("When is your birthday?", "/static/qr_1.png"))
+                       ("Select the correct answer", "/static/qr_1.png"))
             db.commit()
         except sqlite3.IntegrityError:
             print("Sample data already exists, skipping insertion.")
