@@ -2,27 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Answer Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Your Answer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Submit Your Answer</h1>
-    <form method="post">
-        <label for="student_id">Student ID:</label>
-        <input type="text" id="student_id" name="student_id" required><br><br>
-
-        <label>Select Your Answer:</label><br>
-        <input type="radio" id="A" name="response_text" value="A" required>
-        <label for="A">A</label><br>
-        <input type="radio" id="B" name="response_text" value="B">
-        <label for="B">B</label><br>
-        <input type="radio" id="C" name="response_text" value="C">
-        <label for="C">C</label><br>
-        <input type="radio" id="D" name="response_text" value="D">
-        <label for="D">D</label><br>
-        <input type="radio" id="E" name="response_text" value="E">
-        <label for="E">E</label><br><br>
-
-        <input type="submit" value="Submit">
-    </form>
+    <div class="container">
+        <h1>Submit Your Answer</h1>
+        <form method="post">
+            <label for="student_id">Student ID:</label>
+            <input type="text" id="student_id" name="student_id" required>
+            
+            <label>Select Your Answer:</label>
+            <div class="radio-group">
+                <input type="radio" id="A" name="response_text" value="A" required>
+                <label for="A">A</label>
+                <input type="radio" id="B" name="response_text" value="B">
+                <label for="B">B</label>
+                <input type="radio" id="C" name="response_text" value="C">
+                <label for="C">C</label>
+                <input type="radio" id="D" name="response_text" value="D">
+                <label for="D">D</label>
+                <input type="radio" id="E" name="response_text" value="E">
+                <label for="E">E</label>
+            </div>
+            
+            <input type="submit" value="Submit">
+        </form>
+    </div>
 </body>
 </html>
