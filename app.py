@@ -94,10 +94,10 @@ def thank_you(question_id=1):
         labels = [row[0] for row in responses]
         sizes = [row[1] for row in responses]
 
-        # Validate and clean data: replace np.inf and np.nan with 0
-        sizes = [0 if np.isinf(size) or np.isnan(size) else size for size in sizes]
+        # Replace np.inf and np.Inf with 0 explicitly
+        sizes = [0 if size == float('Inf') or np.isinf(size) or np.isnan(size) else size for size in sizes]
 
-        # Check if there are any non-zero values for plotting
+        # Check if sizes are valid (all zero sizes would not create a meaningful pie chart)
         if not any(sizes):
             return "No valid data to display in the pie chart."
 
@@ -119,7 +119,7 @@ def thank_you(question_id=1):
         return render_template('thank_you.html', img_data=img_base64)
     except Exception as e:
         return f"An error occurred while displaying the results: {e}"
-        
+
 # @app.route('/responses')
 # def view_responses():
 #     db = get_db()
