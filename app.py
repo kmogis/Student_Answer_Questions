@@ -63,7 +63,11 @@ def answer_question(question_id):
         return render_template('answer_form.html', question=question[0], question_id=question_id)
     else:
         return "Question not found", 404
-        
+
+@app.route('/thank-you/<int:question_id>')
+def thank_you(question_id=1):
+    return "<h1>Thank you for your submission!</h1><p>Your response has been recorded.</p>"
+    
 @app.route('/generate-qr/<int:question_id>')
 def generate_qr(question_id=1):
     try:
@@ -79,43 +83,43 @@ def generate_qr(question_id=1):
     except Exception as e:
         return f"An error occurred while generating the QR code: {e}"
 
-@app.route('/responses')
-def view_responses():
-    db = get_db()
-    responses = db.execute("SELECT * FROM responses").fetchall()
-    return render_template('thank_you.html', responses=responses)
+# @app.route('/responses')
+# def view_responses():
+#     db = get_db()
+#     responses = db.execute("SELECT * FROM responses").fetchall()
+#     return render_template('thank_you.html', responses=responses)
 
-@app.route('/thank-you/<int:question_id>')
-def thank_you(question_id=1):
-    try:
-        db = get_db()
-        responses = db.execute("SELECT response_text, COUNT(*) as count FROM responses WHERE question_id = ? GROUP BY response_text", (question_id,)).fetchall()
+# @app.route('/thank-you/<int:question_id>')
+# def thank_you(question_id=1):
+#     try:
+#         db = get_db()
+#         responses = db.execute("SELECT response_text, COUNT(*) as count FROM responses WHERE question_id = ? GROUP BY response_text", (question_id,)).fetchall()
 
-        # Prepare data for the pie chart
-        labels = [row[0] for row in responses]
-        sizes = [row[1] for row in responses]
+#         # Prepare data for the pie chart
+#         labels = [row[0] for row in responses]
+#         sizes = [row[1] for row in responses]
 
-        # Replace any np.inf or np.nan values with 0
-        #sizes = [0 if size == np.inf or np.isnan(size) else size for size in sizes]
+#         # Replace any np.inf or np.nan values with 0
+#         #sizes = [0 if size == np.inf or np.isnan(size) else size for size in sizes]
 
-        #Create the pie chart
-        plt.figure(figsize=(8, 6))
-        plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
-        plt.title(f'Poll Results for Question {question_id}')
-        plt.axis('equal')
+#         #Create the pie chart
+#         plt.figure(figsize=(8, 6))
+#         plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
+#         plt.title(f'Poll Results for Question {question_id}')
+#         plt.axis('equal')
 
-        # Save the chart as an image in memory and encode it in base64
-        img = io.BytesIO()
-        plt.savefig(img, format='png')
-        img.seek(0)
-        plt.close()
+#         # Save the chart as an image in memory and encode it in base64
+#         img = io.BytesIO()
+#         plt.savefig(img, format='png')
+#         img.seek(0)
+#         plt.close()
 
-        # Encode the image as a base64 string to embed in the HTML
-        img_base64 = base64.b64encode(img.getvalue()).decode('utf-8')
+#         # Encode the image as a base64 string to embed in the HTML
+#         img_base64 = base64.b64encode(img.getvalue()).decode('utf-8')
 
-        return render_template('thank_you.html', img_data=img_base64)
-    except Exception as e:
-        return f"An error occurred while displaying the results: {e}"
+#         return render_template('thank_you.html', img_data=img_base64)
+#     except Exception as e:
+#         return f"An error occurred while displaying the results: {e}"
 
 if __name__ == '__main__':
     try:
