@@ -99,7 +99,7 @@ def thank_you(question_id=1):
         # Replace any np.inf or np.nan values with 0
         sizes = [0 if size == np.inf or np.isnan(size) else size for size in sizes]
 
-        Create the pie chart
+        #Create the pie chart
         plt.figure(figsize=(8, 6))
         plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
         plt.title(f'Poll Results for Question {question_id}')
