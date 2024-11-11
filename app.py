@@ -58,6 +58,7 @@ def all_responses():
         JOIN questions ON responses.question_id = questions.question_id
         ORDER BY responses.question_id, responses.student_id
     """).fetchall()
+    print(responses)
     return render_template('all_responses.html', responses=responses)
     
 @app.route('/reset-responses')
@@ -179,6 +180,12 @@ def thank_you(question_id=1):
     except Exception as e:
         return f"An error occurred while displaying the results: {e}"
 
+@app.route('/debug')
+def debug():
+    db = get_db()
+    responses = db.execute("SELECT * FROM responses").fetchall()
+    return f"Responses: {responses}"
+    
 if __name__ == '__main__':
     try:
         init_db()  # Run this once to create the tables
