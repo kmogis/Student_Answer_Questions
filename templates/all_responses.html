@@ -26,6 +26,10 @@
                     <td>{{ response['question_text'] }}</td>
                     <td>{{ response['response_text'] }}</td>
                 </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" style="text-align: center;">No responses found</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
