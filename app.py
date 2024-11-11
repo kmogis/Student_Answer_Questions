@@ -102,32 +102,6 @@ def answer_question(question_id):
             return f"You have already answered this question (ID: {question_id})."
 
     return render_template('answer_form.html', question_id=question_id)
-
-# @app.route('/answer/<int:question_id>', methods=['GET', 'POST'])
-# def answer_question(question_id):
-#     if request.method == 'POST':
-#         try:
-#             student_id = request.form['student_id']
-#             response_text = request.form['response_text']
-#             db = get_db()
-#             db.execute("INSERT INTO responses (student_id, question_id, response_text) VALUES (?, ?, ?)",
-#                        (student_id, question_id, response_text))
-#             db.commit()
-#             return redirect(f'/thank-you/{question_id}')
-#         except sqlite3.Error as e:
-#             print(f"Database error: {e}")
-#             return "An error occurred while submitting your response. Please try again.", 500
-
-#     db = get_db()
-#     question = db.execute("SELECT question_text FROM questions WHERE question_id = ?", (question_id,)).fetchone()
-#     if question:
-#         return render_template('answer_form.html', question=question[0], question_id=question_id)
-#     else:
-#         return "Question not found", 404
-
-# @app.route('/thank-you/<int:question_id>')
-# def thank_you(question_id=1):
-#     return "<h1>Thank you for your submission!</h1><p>Your response has been recorded.</p>"
     
 @app.route('/generate-qr/<int:question_id>')
 def generate_qr(question_id):
