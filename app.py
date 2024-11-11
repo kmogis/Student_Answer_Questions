@@ -51,14 +51,14 @@ def insert_sample_data():
 @app.route('/all-responses')
 def all_responses():
     db = get_db()
-    # Fetch all responses with related question information
     responses = db.execute("""
         SELECT responses.student_id, responses.question_id, responses.response_text, questions.question_text
         FROM responses
         JOIN questions ON responses.question_id = questions.question_id
         ORDER BY responses.question_id, responses.student_id
     """).fetchall()
-    print(responses)
+    
+    print("Retrieved responses:", responses)  # Debug print statement
     return render_template('all_responses.html', responses=responses)
     
 @app.route('/reset-responses')
