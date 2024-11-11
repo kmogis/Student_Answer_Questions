@@ -145,7 +145,7 @@ def generate_qr(question_id=1):
         return f"An error occurred while generating the QR code: {e}"
 
 @app.route('/thank-you/<int:question_id>')
-def thank_you(question_id=1):
+def thank_you(question_id):
     try:
         db = get_db()
         responses = db.execute("SELECT response_text, COUNT(*) as count FROM responses WHERE question_id = ? GROUP BY response_text", (question_id,)).fetchall()
