@@ -48,13 +48,6 @@ def insert_sample_data():
             db.commit()
         except sqlite3.IntegrityError:
             print("Sample data already exists, skipping insertion.")
-
-@app.route('/delete-sample-question')
-def delete_sample_question():
-    db = get_db()
-    db.execute("DELETE FROM questions WHERE question_text = 'What is your favorite programming language?'")
-    db.commit()
-    return "Sample question deleted."
     
 @app.route('/all-responses')
 def all_responses():
