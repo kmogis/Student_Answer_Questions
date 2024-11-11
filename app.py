@@ -130,7 +130,7 @@ def answer_question(question_id):
 #     return "<h1>Thank you for your submission!</h1><p>Your response has been recorded.</p>"
     
 @app.route('/generate-qr/<int:question_id>')
-def generate_qr(question_id=1):
+def generate_qr(question_id):
     try:
         base_url = request.host_url.rstrip('/')
         qr_url = f"{base_url}/answer/{question_id}"
